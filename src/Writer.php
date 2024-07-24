@@ -11,12 +11,16 @@ use Illuminate\Support\Enumerable;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
+use OpenSpout\Common\Entity\Row;
+use OpenSpout\Writer\WriterInterface;
 
 abstract class Writer
 {
+	protected bool $headers = true;
+	
 	protected Closure $header_formatter;
 	
-	abstract public function write(string $path): string;
+	abstract protected function writer(): WriterInterface;
 	
 	public static function for(array|Enumerable|Generator|Builder $data): static
 	{
@@ -25,7 +29,6 @@ abstract class Writer
 	
 	public function __construct(
 		protected array|Enumerable|Generator|Builder $data,
-		protected bool $headers = true,
 	) {
 		$this->header_formatter = Str::headline(...);
 	}
@@ -37,11 +40,31 @@ abstract class Writer
 		return $this;
 	}
 	
-	public function withOriginalKeysAsHeaders(): static
+	public function withHeaderFormatter(Closure $header_formatter): static
 	{
-		$this->header_formatter = static fn($key) => $key;
+		$this->header_formatter = $header_formatter;
 		
 		return $this;
+	}
+	
+	public function withOriginalKeysAsHeaders(): static
+	{
+		return $this->withHeaderFormatter(static fn($key) => $key);
+	}
+	
+	public function write(string $path): string
+	{
+		$writer = $this->writer();
+		
+		$writer->openToFile($path);
+		
+		foreach ($this->rows() as $row) {
+			$writer->addRow(Row::fromValues($row->toArray()));
+		}
+		
+		$writer->close();
+		
+		return $path;
 	}
 	
 	public function writeToHttpFile(): File
@@ -60,6 +83,7 @@ abstract class Writer
 		return $this->write($path);
 	}
 	
+	/** @return Generator<Collection> */
 	protected function rows(): Generator
 	{
 		$source = match (true) {
@@ -69,8 +93,17 @@ abstract class Writer
 			default => $this->data,
 		};
 		
+		$needs_headers = $this->headers;
+		
 		foreach ($source as $row) {
-			yield Collection::make($row);
+			$row = Collection::make($row);
+			
+			if ($needs_headers) {
+				$needs_headers = false;
+				yield $row->keys()->map($this->header_formatter);
+			}
+			
+			yield $row;
 		}
 	}
 }

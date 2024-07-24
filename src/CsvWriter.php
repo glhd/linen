@@ -2,25 +2,18 @@
 
 namespace Glhd\Linen;
 
-use Generator;
-use Illuminate\Contracts\Database\Query\Builder;
-use Illuminate\Support\Enumerable;
-use OpenSpout\Common\Entity\Row;
-use OpenSpout\Writer\CSV\Options;
-use OpenSpout\Writer\CSV\Writer as OpenSpoutWriter;
+use OpenSpout\Writer\CSV as OpenSpout;
+use OpenSpout\Writer\WriterInterface;
 
 class CsvWriter extends Writer
 {
-	public function __construct(
-		protected array|Enumerable|Generator|Builder $data,
-		protected bool $headers = true,
-		protected string $delimiter = ',',
-		protected string $enclosure = '"',
-		protected bool $bom = true,
-		protected bool $empty_new_line = true,
-	) {
-		parent::__construct($data, $headers);
-	}
+	protected string $delimiter = ',';
+	
+	protected string $enclosure = '"';
+	
+	protected bool $bom = true;
+	
+	protected bool $empty_new_line = true;
 	
 	public function withDelimiter(string $delimiter): static
 	{
@@ -52,20 +45,7 @@ class CsvWriter extends Writer
 	
 	public function write(string $path): string
 	{
-		$options = new Options();
-		$options->FIELD_DELIMITER = $this->delimiter;
-		$options->FIELD_ENCLOSURE = $this->enclosure;
-		$options->SHOULD_ADD_BOM = $this->bom;
-		
-		$writer = new OpenSpoutWriter($options);
-		
-		$writer->openToFile($path);
-		
-		foreach ($this->rows() as $row) {
-			$writer->addRow(Row::fromValues($row->toArray()));
-		}
-		
-		$writer->close();
+		parent::write($path);
 		
 		if ($this->empty_new_line) {
 			file_put_contents($path, rtrim(file_get_contents($path), PHP_EOL));
@@ -74,19 +54,13 @@ class CsvWriter extends Writer
 		return $path;
 	}
 	
-	protected function rows(): Generator
+	protected function writer(): WriterInterface
 	{
-		$source = parent::rows();
+		$options = new OpenSpout\Options();
+		$options->FIELD_DELIMITER = $this->delimiter;
+		$options->FIELD_ENCLOSURE = $this->enclosure;
+		$options->SHOULD_ADD_BOM = $this->bom;
 		
-		$needs_headers = $this->headers;
-		
-		foreach ($source as $row) {
-			if ($needs_headers) {
-				$needs_headers = false;
-				yield $row->keys()->map($this->header_formatter);
-			}
-			
-			yield $row;
-		}
+		return new OpenSpout\Writer($options);
 	}
 }
