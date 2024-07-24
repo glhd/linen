@@ -1,5 +1,5 @@
 {
-  "name": "glhd/laravel-package-template",
+  "name": "glhd/linen",
   "description": "",
   "keywords": [
     "laravel"
@@ -24,7 +24,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Glhd\\LaravelPackageTemplate\\": "src/"
+      "Glhd\\Linen\\": "src/"
     }
   },
   "autoload-dev": {
@@ -32,7 +32,7 @@
       "tests/TestCase.php"
     ],
     "psr-4": {
-      "Glhd\\LaravelPackageTemplate\\Tests\\": "tests/"
+      "Glhd\\Linen\\Tests\\": "tests/"
     }
   },
   "scripts": {
@@ -42,7 +42,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Glhd\\LaravelPackageTemplate\\Support\\LaravelPackageTemplateServiceProvider"
+        "Glhd\\Linen\\Support\\LinenServiceProvider"
       ]
     }
   },
