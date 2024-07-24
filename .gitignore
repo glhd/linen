@@ -1,0 +1,16 @@
+vendor/
+composer.phar
+composer.lock
+phpunit.xml
+.phpunit.result.cache
+.php_cs.cache
+.php-cs-fixer.cache
+.env
+
+.DS_Store
+.phpstorm.meta.php
+_ide_helper.php
+
+node_modules
+mix-manifest.json
+yarn-error.log

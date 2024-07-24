@@ -1,0 +1,47 @@
+name: Template Cleanup
+on:
+  push:
+    branches: [ main ]
+jobs:
+  template-cleanup:
+    name: Template Cleanup
+    runs-on: ubuntu-latest
+    if: github.event.repository.name != 'laravel-package-template'
+    permissions:
+      contents: write
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+      - name: Cleanup
+        run: |
+          export LC_CTYPE=C
+          export LANG=C
+          
+          NAME="${GITHUB_REPOSITORY##*/}"
+          KEBAB=$(echo $NAME | tr -s -c '[:alpha:][:cntrl:]' ' ' | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+          STUDLY="$(echo "$NAME" | awk '{split($0,a,"[_ -]"); for(i=1;i<=length(a);++i) printf "%s",(length(a[i]) > 0 ? toupper(substr(a[i],1,1)) tolower(substr(a[i],2)) : "")}')"
+
+          # Replace placeholder names
+          find . -type d \( -path "./.git" -o -path "./.github" \) -prune -o -type f -exec sed -i "s/laravel-package-template/$KEBAB/g" {} +
+          find . -type d \( -path "./.git" -o -path "./.github" \) -prune -o -type f -exec sed -i "s/LaravelPackageTemplate/$STUDLY/g" {} +
+          
+          # Rename files
+          git mv .idea/laravel-package-template.iml .idea/$KEBAB.iml
+          git mv config/config.php config/$KEBAB.php
+          git mv src/Support/LaravelPackageTemplateServiceProvider.php src/Support/${STUDLY}ServiceProvider.php
+
+          # Cleanup
+          rm -f .github/workflows/template-cleanup.yml
+      - name: Show changes
+        run: git status
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Template cleanup"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
