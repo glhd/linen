@@ -14,7 +14,8 @@
   "license": "MIT",
   "require": {
     "illuminate/support": "^10|^11|dev-master",
-    "ext-json": "*"
+    "ext-json": "*",
+    "openspout/openspout": "^4.24"
   },
   "require-dev": {
     "orchestra/testbench": "^8|^9|10.x-dev|dev-master",
