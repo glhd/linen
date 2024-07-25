@@ -7,7 +7,7 @@
 	</a>
 	<a href="https://codeclimate.com/github/glhd/linen/test_coverage" target="_blank">
 		<img 
-			src="https://api.codeclimate.com/v1/badges/change-me/test_coverage" 
+			src="https://api.codeclimate.com/v1/badges/1147f60db6ef22057dbc/test_coverage" 
 			alt="Coverage Status" 
 		/>
 	</a>
@@ -31,8 +31,30 @@
     </a>
 </div>
 
-# linen
+# Linen
+
+Linen is a lightweight spreadsheet utility for Laravel. It's a simple wrapper for 
+[openspout](https://github.com/openspout/openspout) with some data normalization conveniences.
 
 ## Installation
 
+```shell
+composer require glhd/linen
+```
+
 ## Usage
+
+To read a spreadsheet:
+
+```php
+foreach (Linen::read('path/to/your.xlsx') as $row) {
+    // $row is a collection, keyed by the headers in snake_case
+}
+```
+
+To write a spreadsheet:
+
+```php
+// $data can be any iterable/Enumerable/etc
+$path = Linen::write($data, 'path/to/your.xlsx');
+```
