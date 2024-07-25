@@ -2,8 +2,6 @@
 
 namespace Glhd\Linen\Tests;
 
-use Glhd\Linen\Support\LinenServiceProvider;
-use Illuminate\Container\Container;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
@@ -15,9 +13,7 @@ abstract class TestCase extends Orchestra
 	
 	protected function getPackageProviders($app)
 	{
-		return [
-			LinenServiceProvider::class,
-		];
+		return [];
 	}
 	
 	protected function getPackageAliases($app)

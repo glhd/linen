@@ -42,9 +42,7 @@
   },
   "extra": {
     "laravel": {
-      "providers": [
-        "Glhd\\Linen\\Support\\LinenServiceProvider"
-      ]
+      "providers": []
     }
   },
   "minimum-stability": "dev",

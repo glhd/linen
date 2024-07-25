@@ -2,13 +2,9 @@
 
 namespace Feature;
 
-use Glhd\Linen\CsvReader;
-use Glhd\Linen\CsvWriter;
 use Glhd\Linen\ExcelReader;
-use Glhd\Linen\ExcelWriter;
 use Glhd\Linen\Facades\Linen;
 use Glhd\Linen\Tests\TestCase;
-use Illuminate\Support\Facades\App;
 
 class FacadeTest extends TestCase
 {

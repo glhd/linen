@@ -20,8 +20,6 @@ abstract class Writer
 	
 	protected Closure $header_formatter;
 	
-	abstract protected function writer(): WriterInterface;
-	
 	public static function for(array|Enumerable|Generator|Builder $data): static
 	{
 		return new static($data);
@@ -82,6 +80,8 @@ abstract class Writer
 		
 		return $this->write($path);
 	}
+	
+	abstract protected function writer(): WriterInterface;
 	
 	/** @return Generator<Collection> */
 	protected function rows(): Generator

@@ -16,7 +16,7 @@ class CsvReader extends Reader
 	{
 		$value = $cell->getValue();
 		
-		return match(true) {
+		return match (true) {
 			is_numeric($value) => (float) $value == (int) $value ? (int) $value : (float) $value,
 			'' === $value => null,
 			default => $value,

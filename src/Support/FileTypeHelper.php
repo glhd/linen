@@ -42,7 +42,7 @@ class FileTypeHelper
 	{
 		$extension = pathinfo($path, PATHINFO_EXTENSION);
 		
-		$writer = match($extension) {
+		$writer = match ($extension) {
 			'xlsx', 'xls' => ExcelWriter::for($data),
 			'csv' => CsvWriter::for($data),
 			default => throw new InvalidArgumentException("Unable to infer file type for '{$path}'"),

@@ -2,7 +2,6 @@
 
 namespace Feature;
 
-use Glhd\Linen\CsvWriter;
 use Glhd\Linen\ExcelReader;
 use Glhd\Linen\ExcelWriter;
 use Glhd\Linen\Tests\TestCase;

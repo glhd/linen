@@ -2,8 +2,6 @@
 
 namespace Glhd\Linen;
 
-use DateInterval;
-use DateTimeInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
@@ -17,8 +15,6 @@ use UnexpectedValueException;
 /** @extends IteratorAggregate<int, Collection> */
 abstract class Reader implements IteratorAggregate
 {
-	abstract protected function reader(): ReaderInterface;
-	
 	public static function from(string $path): static
 	{
 		return new static($path);
@@ -52,7 +48,6 @@ abstract class Reader implements IteratorAggregate
 					
 					foreach ($sheet->getRowIterator() as $row) {
 						/** @var \OpenSpout\Common\Entity\Row $row */
-						
 						if (null === $keys) {
 							$keys = array_map($this->headerToKey(...), $row->toArray());
 							$columns = count($keys);
@@ -79,6 +74,8 @@ abstract class Reader implements IteratorAggregate
 			}
 		});
 	}
+	
+	abstract protected function reader(): ReaderInterface;
 	
 	protected function castRow(Row $data): array
 	{
