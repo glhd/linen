@@ -1,0 +1,21 @@
+{
+    "$schema": "https://laravel-ide.com/schema/laravel-ide-v2.json",
+    "completions": [
+        {
+            "complete": "directoryFiles",
+            "options": {
+                "directory": "tests/fixtures"
+            },
+            "condition": [
+                {
+                    "methodNames": [
+                        "fixture"
+                    ],
+                    "parameters": [
+                        1
+                    ]
+                }
+            ]
+        }
+    ]
+}

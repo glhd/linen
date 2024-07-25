@@ -13,7 +13,7 @@ class CsvWriter extends Writer
 	
 	protected bool $bom = true;
 	
-	protected bool $empty_new_line = true;
+	protected bool $empty_new_line = false;
 	
 	public function withDelimiter(string $delimiter): static
 	{
@@ -36,6 +36,13 @@ class CsvWriter extends Writer
 		return $this;
 	}
 	
+	public function withEmptyNewLineAtEndOfFile(): static
+	{
+		$this->empty_new_line = true;
+		
+		return $this;
+	}
+	
 	public function withoutEmptyNewLineAtEndOfFile(): static
 	{
 		$this->empty_new_line = false;
@@ -47,7 +54,7 @@ class CsvWriter extends Writer
 	{
 		parent::write($path);
 		
-		if ($this->empty_new_line) {
+		if (! $this->empty_new_line) {
 			file_put_contents($path, rtrim(file_get_contents($path), PHP_EOL));
 		}
 		

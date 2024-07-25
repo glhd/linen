@@ -2,23 +2,41 @@
 
 namespace Glhd\Linen;
 
+use DateInterval;
+use DateTimeInterface;
+use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
+use IteratorAggregate;
+use OpenSpout\Common\Entity\Cell;
+use OpenSpout\Common\Entity\Row;
 use OpenSpout\Reader\ReaderInterface;
+use Traversable;
 use UnexpectedValueException;
 
-abstract class Reader
+/** @extends IteratorAggregate<int, Collection> */
+abstract class Reader implements IteratorAggregate
 {
 	abstract protected function reader(): ReaderInterface;
 	
+	public static function from(string $path): static
+	{
+		return new static($path);
+	}
+	
 	public static function read(string $path): LazyCollection
 	{
-		return (new static($path))->collect();
+		return static::from($path)->collect();
 	}
 	
 	public function __construct(
 		protected string $path,
 	) {
+	}
+	
+	public function getIterator(): Traversable
+	{
+		return $this->collect();
 	}
 	
 	public function collect(): LazyCollection
@@ -33,13 +51,15 @@ abstract class Reader
 					$keys = null;
 					
 					foreach ($sheet->getRowIterator() as $row) {
+						/** @var \OpenSpout\Common\Entity\Row $row */
+						
 						if (null === $keys) {
 							$keys = array_map($this->headerToKey(...), $row->toArray());
 							$columns = count($keys);
 							continue;
 						}
 						
-						$data = $row->toArray();
+						$data = $this->castRow($row);
 						$data_columns = count($data);
 						
 						if ($columns < $data_columns) {
@@ -51,13 +71,23 @@ abstract class Reader
 							$data = array_merge($data, array_fill(0, $columns - $data_columns, null));
 						}
 						
-						yield array_combine($keys, $data);
+						yield Collection::make(array_combine($keys, $data));
 					}
 				}
 			} finally {
 				$reader->close();
 			}
 		});
+	}
+	
+	protected function castRow(Row $data): array
+	{
+		return array_map($this->castCell(...), $data->getCells());
+	}
+	
+	protected function castCell(Cell $cell): mixed
+	{
+		return $cell->getValue();
 	}
 	
 	protected function headerToKey(string $value): string
