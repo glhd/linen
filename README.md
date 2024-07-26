@@ -31,7 +31,9 @@
     </a>
 </div>
 
-# Linen
+<h1>
+    <img src="art/linen.png" height="147" alt="Linen" />
+</h1>
 
 Linen is a lightweight spreadsheet utility for Laravel. It's a simple wrapper for 
 [openspout](https://github.com/openspout/openspout) with some data normalization conveniences.
