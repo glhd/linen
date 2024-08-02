@@ -58,8 +58,10 @@ abstract class Reader implements IteratorAggregate
 						$data_columns = count($data);
 						
 						if ($columns < $data_columns) {
-							// TODO: Offer option to trim
-							throw new UnexpectedValueException("Expected {$columns} columns of data but got {$data_columns}");
+							foreach (range(1, $data_columns) as $index => $column) {
+								$keys[$index] ??= "column{$column}";
+							}
+							$columns = count($keys);
 						}
 						
 						if ($columns > $data_columns) {
