@@ -13,15 +13,15 @@
   "type": "library",
   "license": "MIT",
   "require": {
-    "illuminate/support": "^10|^11|dev-master",
+    "illuminate/support": "^10|^11|^12|dev-master",
     "ext-json": "*",
     "openspout/openspout": "^4.24"
   },
   "require-dev": {
-    "orchestra/testbench": "^8|^9|10.x-dev|dev-master",
+    "orchestra/testbench": "^8|^9|10|dev-master",
     "friendsofphp/php-cs-fixer": "^3.34",
     "mockery/mockery": "^1.6",
-    "phpunit/phpunit": "^10.5"
+    "phpunit/phpunit": "^10.5|^11.0"
   },
   "autoload": {
     "psr-4": {
