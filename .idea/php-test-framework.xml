@@ -6,6 +6,7 @@
         <cache>
           <versions>
             <info id="Local/Users/inxilpro/Development/open-source/linen/vendor/autoload.php" version="10.5.28" />
+            <info id="Local/vendor/autoload.php" version="10.5.28" />
           </versions>
         </cache>
       </tool>
