@@ -2,6 +2,8 @@
 
 namespace Glhd\Linen;
 
+use Closure;
+use Glhd\Linen\Support\WriteIterator;
 use OpenSpout\Writer\CSV as OpenSpout;
 use OpenSpout\Writer\WriterInterface;
 
@@ -50,15 +52,16 @@ class CsvWriter extends Writer
 		return $this;
 	}
 	
-	public function write(string $path): string
+	public function getIterator(?string $path = null): WriteIterator
 	{
-		parent::write($path);
+		$path ??= tempfile_with_cleanup();
 		
-		if (! $this->empty_new_line) {
-			file_put_contents($path, rtrim(file_get_contents($path), PHP_EOL));
-		}
-		
-		return $path;
+		return new WriteIterator(
+			path: $path,
+			generator: $this->rows(),
+			writer: $this->writer(),
+			cleanup: $this->cleanupCallback(),
+		);
 	}
 	
 	protected function writer(): WriterInterface
@@ -69,5 +72,14 @@ class CsvWriter extends Writer
 		$options->SHOULD_ADD_BOM = $this->bom;
 		
 		return new OpenSpout\Writer($options);
+	}
+	
+	protected function cleanupCallback(): ?Closure
+	{
+		if (! $this->empty_new_line) {
+			return fn($path) => file_put_contents($path, rtrim(file_get_contents($path), PHP_EOL));
+		}
+		
+		return null;
 	}
 }

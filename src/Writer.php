@@ -4,14 +4,13 @@ namespace Glhd\Linen;
 
 use Closure;
 use Generator;
+use Glhd\Linen\Support\WriteIterator;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\File;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
-use OpenSpout\Common\Entity\Row;
 use OpenSpout\Writer\WriterInterface;
 
 abstract class Writer
@@ -20,13 +19,13 @@ abstract class Writer
 	
 	protected Closure $header_formatter;
 	
-	public static function for(array|Enumerable|Generator|Builder $data): static
+	public static function for(array|Enumerable|Closure|Builder $data): static
 	{
 		return new static($data);
 	}
 	
 	public function __construct(
-		protected array|Enumerable|Generator|Builder $data,
+		protected array|Enumerable|Closure|Builder $data,
 	) {
 		$this->header_formatter = Str::headline(...);
 	}
@@ -50,35 +49,26 @@ abstract class Writer
 		return $this->withHeaderFormatter(static fn($key) => $key);
 	}
 	
+	public function getIterator(?string $path = null): WriteIterator
+	{
+		$path ??= tempfile_with_cleanup();
+		
+		return new WriteIterator($path, $this->rows(), $this->writer());
+	}
+	
 	public function write(string $path): string
 	{
-		$writer = $this->writer();
-		
-		$writer->openToFile($path);
-		
-		foreach ($this->rows() as $row) {
-			$writer->addRow(Row::fromValues($row->toArray()));
-		}
-		
-		$writer->close();
-		
-		return $path;
+		return $this->getIterator($path)->drain();
 	}
 	
 	public function writeToHttpFile(): File
 	{
-		$path = $this->writeToTemporaryFile();
-		
-		return new File($path);
+		return new File($this->writeToTemporaryFile());
 	}
 	
 	public function writeToTemporaryFile(): string
 	{
-		$path = tempnam(sys_get_temp_dir(), 'glhd-linen-data');
-		
-		App::terminating(fn() => @unlink($path));
-		
-		return $this->write($path);
+		return $this->write(tempfile_with_cleanup());
 	}
 	
 	abstract protected function writer(): WriterInterface;
@@ -87,7 +77,7 @@ abstract class Writer
 	protected function rows(): Generator
 	{
 		$source = match (true) {
-			$this->data instanceof Generator => LazyCollection::make($this->data),
+			$this->data instanceof Closure => LazyCollection::make($this->data),
 			is_array($this->data) => Collection::make($this->data),
 			$this->data instanceof Builder => $this->data->lazyById(),
 			default => $this->data,
