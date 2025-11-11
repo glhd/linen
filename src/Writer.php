@@ -51,7 +51,7 @@ abstract class Writer
 	
 	public function getIterator(?string $path = null): WriteIterator
 	{
-		$path ??= tempfile_with_cleanup();
+		$path ??= tempnam_with_cleanup();
 		
 		return new WriteIterator($path, $this->rows(), $this->writer());
 	}
@@ -68,7 +68,7 @@ abstract class Writer
 	
 	public function writeToTemporaryFile(): string
 	{
-		return $this->write(tempfile_with_cleanup());
+		return $this->write(tempnam_with_cleanup());
 	}
 	
 	abstract protected function writer(): WriterInterface;

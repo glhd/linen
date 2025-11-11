@@ -54,7 +54,7 @@ class CsvWriter extends Writer
 	
 	public function getIterator(?string $path = null): WriteIterator
 	{
-		$path ??= tempfile_with_cleanup();
+		$path ??= tempnam_with_cleanup();
 		
 		return new WriteIterator(
 			path: $path,

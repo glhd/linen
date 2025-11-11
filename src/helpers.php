@@ -4,7 +4,7 @@ namespace Glhd\Linen;
 
 use Illuminate\Support\Facades\App;
 
-function tempfile_with_cleanup(): string
+function tempnam_with_cleanup(): string
 {
 	$path = tempnam(sys_get_temp_dir(), 'glhd-linen-data');
 	

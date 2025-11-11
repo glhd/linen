@@ -4,7 +4,7 @@ namespace Feature;
 
 use Glhd\Linen\CsvWriter;
 use Glhd\Linen\Tests\TestCase;
-use function Glhd\Linen\tempfile_with_cleanup;
+use function Glhd\Linen\tempnam_with_cleanup;
 
 class CsvWriterTest extends TestCase
 {
@@ -54,7 +54,7 @@ class CsvWriterTest extends TestCase
 			['user_id' => 10, 'name' => 'Skyler'],
 		];
 		
-		$iterator = CsvWriter::for($data)->getIterator(tempfile_with_cleanup());
+		$iterator = CsvWriter::for($data)->getIterator(tempnam_with_cleanup());
 		
 		// Iterator returns [original key] => [rows written]
 		$this->assertEquals(
