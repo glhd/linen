@@ -5,6 +5,8 @@ format. This project adheres to [Semantic Versioning](https://semver.org/spec/v2
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-03-23
+
 ## [0.0.4] - 2025-11-11
 
 ## [0.0.3] - 2025-07-16
@@ -24,7 +26,9 @@ format. This project adheres to [Semantic Versioning](https://semver.org/spec/v2
 -   `Fixed` for any bug fixes. 
 -   `Security` in case of vulnerabilities.
 
-[Unreleased]: https://github.com/glhd/linen/compare/0.0.4...HEAD
+[Unreleased]: https://github.com/glhd/linen/compare/0.1.0...HEAD
+
+[0.1.0]: https://github.com/glhd/linen/compare/0.0.4...0.1.0
 
 [0.0.4]: https://github.com/glhd/linen/compare/0.0.3...0.0.4
 
