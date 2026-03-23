@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -19,7 +19,7 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, bcmath, intl, iconv
 
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v5
         with:
           path: |
             vendor
@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         env:
           COMPOSER_DISCARD_CHANGES: true
-        run: composer require --no-progress --no-interaction --prefer-dist --update-with-all-dependencies "laravel/framework:10.*" "orchestra/testbench:8.*"
+        run: composer require --no-progress --no-interaction --prefer-dist --update-with-all-dependencies "laravel/framework:12.*"
 
       - name: Run PHP CS Fixer
         run: ./vendor/bin/php-cs-fixer fix --diff --dry-run

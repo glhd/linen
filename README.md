@@ -5,12 +5,6 @@
 			alt="Build Status" 
 		/>
 	</a>
-	<a href="https://codeclimate.com/github/glhd/linen/test_coverage" target="_blank">
-		<img 
-			src="https://api.codeclimate.com/v1/badges/1147f60db6ef22057dbc/test_coverage" 
-			alt="Coverage Status" 
-		/>
-	</a>
 	<a href="https://packagist.org/packages/glhd/linen" target="_blank">
         <img 
             src="https://poser.pugx.org/glhd/linen/v/stable" 
@@ -23,10 +17,10 @@
             alt="MIT Licensed" 
         />
     </a>
-    <a href="https://twitter.com/inxilpro" target="_blank">
+    <a href="https://bsky.app/profile/cmorrell.com" target="_blank">
         <img 
-            src="https://img.shields.io/twitter/follow/inxilpro?style=social" 
-            alt="Follow @inxilpro on Twitter" 
+            src="https://img.shields.io/bluesky/followers/cmorrell.com" 
+            alt="Follow @cmorrell.com on bsky" 
         />
     </a>
 </div>
